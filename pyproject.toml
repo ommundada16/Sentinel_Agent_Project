@@ -6,6 +6,7 @@ requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 markers = ["live: calls a real LLM (skipped by default)", "ml: uses the real MiniLM model"]
 addopts = "-m 'not live and not ml'"
 
