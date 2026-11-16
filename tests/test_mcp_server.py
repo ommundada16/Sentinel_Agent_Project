@@ -33,3 +33,4 @@ def test_mcp_roundtrip(file_db):
                                     "search_governance_docs", "request_access", "revoke_access"}
     users = ex.call("lookup_user", {"name_or_email": "Priya Sharma"})
     assert users["matches"][0]["id"] == 1
+    ex.close()

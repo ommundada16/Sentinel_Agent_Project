@@ -7,7 +7,12 @@ from app.agent.embeddings import EmbeddingProvider, get_embedder
 from app.data import db
 from app.data.ingest import ingest_corpus
 from app.data.models import (
-    AccessRequest, Entitlement, Role, RoleEntitlement, User, UserRole,
+    AccessRequest,
+    Entitlement,
+    Role,
+    RoleEntitlement,
+    User,
+    UserRole,
 )
 
 USERS = [

@@ -11,3 +11,9 @@ addopts = "-m 'not live and not ml'"
 
 [tool.ruff]
 line-length = 110
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["B008", "E501"]  # FastAPI's Depends() default is the idiom
+
+

@@ -3,7 +3,6 @@
 Revision ID: 0001
 """
 from alembic import op
-
 from app.data import db
 
 revision = "0001"

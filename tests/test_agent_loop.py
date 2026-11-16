@@ -121,7 +121,7 @@ def test_bad_input_rejected_before_llm(seeded):
 
 
 def test_conversation_state_persists_in_db(seeded):
-    agent, llm = make([{"text": "first"}, {"text": "second"}])
+    agent, _llm = make([{"text": "first"}, {"text": "second"}])
     agent.chat("s10", "hello")
     agent2, llm2 = make([{"text": "second"}])  # a brand-new Agent instance = stateless API
     agent2.chat("s10", "again")

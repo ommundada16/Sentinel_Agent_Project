@@ -9,8 +9,15 @@ from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.orm import Session
 
 from app.data.models import (
-    AccessRequest, AuditLog, ChatSession, DocChunk, Entitlement, PendingApproval,
-    RoleEntitlement, User, UserRole,
+    AccessRequest,
+    AuditLog,
+    ChatSession,
+    DocChunk,
+    Entitlement,
+    PendingApproval,
+    RoleEntitlement,
+    User,
+    UserRole,
 )
 
 MAX_ROWS = 50
@@ -115,7 +122,7 @@ def search_doc_chunks(s: Session, query_vec: list[float], k: int = 4) -> list[di
     scored = []
     for c in s.scalars(select(DocChunk)):
         a, b = query_vec, c.embedding
-        dot = sum(x * y for x, y in zip(a, b))
+        dot = sum(x * y for x, y in zip(a, b, strict=False))
         den = (math.sqrt(sum(x * x for x in a)) * math.sqrt(sum(y * y for y in b))) or 1.0
         scored.append((dot / den, c))
     scored.sort(key=lambda t: -t[0])

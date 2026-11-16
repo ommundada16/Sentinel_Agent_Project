@@ -19,13 +19,13 @@ class AuditLogger:
             prompt_tokens: int = 0, completion_tokens: int = 0, notes: str = "") -> None:
         cfg = get_settings()
         cost = (prompt_tokens * cfg.price_in_per_m + completion_tokens * cfg.price_out_per_m) / 1_000_000
-        fields = dict(
-            session_id=self.session_id, actor=actor, action=action, tool=tool,
-            args_json=redact_for_audit(args) if args is not None else None,
-            result_json=redact_for_audit(result) if result is not None else None,
-            approval_status=approval_status, latency_ms=round(latency_ms, 2),
-            tokens=prompt_tokens + completion_tokens, cost_usd=cost, notes=notes,
-        )
+        fields = {
+            "session_id": self.session_id, "actor": actor, "action": action, "tool": tool,
+            "args_json": redact_for_audit(args) if args is not None else None,
+            "result_json": redact_for_audit(result) if result is not None else None,
+            "approval_status": approval_status, "latency_ms": round(latency_ms, 2),
+            "tokens": prompt_tokens + completion_tokens, "cost_usd": cost, "notes": notes,
+        }
         # WHY own transaction: the audit row is committed even if the surrounding work later fails.
         with db.session_scope() as s:
             repo.add_audit(s, **fields)

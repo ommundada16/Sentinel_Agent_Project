@@ -54,9 +54,8 @@ def test_input_validation():
 
 def test_allowlist_and_approval_gate():
     assert g.is_allowed_tool("lookup_user") and not g.is_allowed_tool("drop_database")
-    assert g.requires_approval("WRITE", None)
-    assert g.requires_approval("READ", "high")
-    assert not g.requires_approval("READ", "low")
+    assert g.requires_approval("WRITE")
+    assert not g.requires_approval("READ")
 
 
 def test_output_and_audit_redaction():

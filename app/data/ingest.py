@@ -29,7 +29,7 @@ def ingest_text(s: Session, embedder: EmbeddingProvider, doc_id: str, title: str
     repo.add_doc_chunks(s, [
         {"doc_id": doc_id, "doc_title": title, "chunk_index": i, "content": c, "embedding": v,
          "metadata_json": {"source": "corpus"}}
-        for i, (c, v) in enumerate(zip(chunks, vectors))
+        for i, (c, v) in enumerate(zip(chunks, vectors, strict=False))
     ])
     return len(chunks)
 

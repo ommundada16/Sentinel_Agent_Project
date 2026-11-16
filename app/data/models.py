@@ -1,5 +1,5 @@
 """SQLAlchemy models (spec 5.1)."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, Text
@@ -9,7 +9,7 @@ EMBED_DIM = 384  # all-MiniLM-L6-v2 output size
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class Base(DeclarativeBase):

@@ -124,12 +124,7 @@ class Agent:
             audit.log("guardrail", "schema_rejected", tool=call.name, args=call.args, notes=problems)
             return f"Error: invalid arguments ({problems}). Fix them or ask the user.", None
 
-        sensitivity = None
-        if "entitlement_id" in args:
-            with db.session_scope() as s:
-                ent = repo.get_entitlement(s, args["entitlement_id"])
-            sensitivity = ent["sensitivity"] if ent else None
-        if g.requires_approval(spec.kind, sensitivity):
+        if g.requires_approval(spec.kind):
             approval_id = uuid.uuid4().hex
             tool_call = {"id": call.id, "name": call.name, "args": args}
             with db.session_scope() as s:

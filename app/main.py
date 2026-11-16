@@ -63,7 +63,7 @@ def approve(approval_id: str, req: ApprovalRequest, agent: Agent = Depends(get_a
     try:
         return _resp(agent.resolve_approval(approval_id, req.decision))
     except LookupError:
-        raise HTTPException(404, "approval not found or already resolved")
+        raise HTTPException(404, "approval not found or already resolved") from None
 
 
 @app.get("/audit")

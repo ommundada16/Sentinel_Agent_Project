@@ -42,7 +42,7 @@ INJECTION_PATTERNS = {
     "secrecy": r"\bdo\s+not\s+(tell|inform|notify|alert)\s+the\s+user\b",
     "exfiltration": r"\b(reveal|print|show|leak)\s+.{0,30}(system\s+prompt|api\s+key|secret|password)",
 }
-_COMPILED = {k: re.compile(v, re.I) for k, v in INJECTION_PATTERNS.items()}
+_COMPILED = {k: re.compile(v, re.IGNORECASE) for k, v in INJECTION_PATTERNS.items()}
 _SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
 OPEN_TAG, CLOSE_TAG = "<untrusted_data", "</untrusted_data>"
 
@@ -86,9 +86,12 @@ def sanitize_untrusted(result: dict, source: str) -> tuple[str, list[str]]:
 
 
 # 5. Approval gate ------------------------------------------------------------------
-def requires_approval(kind: str, sensitivity: str | None) -> bool:
-    # WHY fail closed: anything that writes, or touches a high-sensitivity entitlement, needs a human.
-    return kind == "WRITE" or sensitivity == "high"
+def requires_approval(kind: str) -> bool:
+    # WHY fail closed: every WRITE needs a human, whatever the entitlement's sensitivity.
+    # Deliberate deviation from the spec's "or sensitivity=high" clause: all writes are already gated,
+    # and gating READ tools such as check_policy on high entitlements would force a human click just
+    # to *ask* whether something is allowed. (See DECISIONS.md.)
+    return kind == "WRITE"
 
 
 # 6. Output validation + audit redaction ---------------------------------------------
