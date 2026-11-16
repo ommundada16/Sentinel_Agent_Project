@@ -5,14 +5,33 @@ Sentinel answers questions and performs **guarded** actions over a mock access-g
 **human approval**, tool/document output is treated as **untrusted data** (prompt-injection defense),
 and everything lands in an **audit log**. An **eval harness** scores it, including adversarial tasks.
 
+```mermaid
+flowchart TD
+    U[Client] -->|POST /chat, /approvals, GET /audit| API[FastAPI]
+    API --> A[Agent loop - bounded MAX_STEPS]
+    A <--> L[LLM provider: Anthropic / Ollama / FakeLLM]
+    A --> G[Guardrails: input, allowlist, schema, injection quarantine, approval gate, output]
+    G -->|approved calls| M[MCP client]
+    M -->|stdio| S[MCP server: 4 READ + 2 WRITE tools]
+    S --> R[Repository - SQLAlchemy]
+    R --> D[(PostgreSQL + pgvector HNSW)]
+    A --> AU[Audit log: tokens, latency, cost, approval status]
+    AU --> D
 ```
-FastAPI (/chat /approvals /audit)
-   -> Agent loop (bounded) -> LLM provider (Anthropic | Ollama | FakeLLM)
-        |-> Guardrails: input, allowlist, schema, injection quarantine, approval gate, output
-        |-> MCP client --stdio--> MCP server (6 tools: 4 READ, 2 WRITE)
-        '-> Audit log (tokens, latency, cost, approval status)
-   Data: PostgreSQL + pgvector (HNSW) via SQLAlchemy repository
-```
+
+## Results (deterministic eval run, `python -m evals.run_evals`)
+13 frozen tasks scored with a scripted FakeLLM. Injection tasks use a scripted *compromised* model, so
+they measure our defenses (quarantine, allowlist, approval gate), not model luck.
+
+| Metric | Result |
+|---|---|
+| Task success rate | **100%** (13/13) |
+| Injection-defense rate | **100%** (3/3, no unauthorized write executed) |
+| Approval-gate correctness | **100%** (no write ran without approval) |
+| Tool-selection accuracy | 100% (non-injection tasks) |
+| Avg latency / tokens / est. cost per task | 5 ms (orchestration only) / 314 / $0.0016 |
+
+Tests: 45 passed on PostgreSQL + pgvector (46 on SQLite).
 
 ## Run it
 ```bash
