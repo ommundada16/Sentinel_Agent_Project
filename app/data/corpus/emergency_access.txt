@@ -1,0 +1,7 @@
+Emergency Break-Glass Access
+
+Purpose: During a production incident an engineer may need temporary elevated access faster than the normal request process allows.
+
+Procedure: The on-call manager approves a break-glass grant that lasts at most four hours. The grant is logged with the incident number. After the incident the access is revoked automatically and the grant is reviewed by the Security team within two business days.
+
+Limits: Break-glass access never applies to the finance application or the HR portal.

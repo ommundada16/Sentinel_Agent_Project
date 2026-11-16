@@ -1,0 +1,11 @@
+Privileged Access Policy
+
+Purpose: Privileged or administrator access can change systems and data at scale, so it is tightly controlled.
+
+Eligibility: High sensitivity entitlements, including administrator access to the finance application, the HR portal, GitHub and cloud consoles, may only be granted to active employees in the owning department or in the IT and Security departments.
+
+Approval: Every grant or revocation of privileged access requires explicit human approval. Automated systems and AI agents may propose a change but must never apply it without that approval.
+
+Justification: Requests for privileged access must include a written business justification of at least ten characters describing why the access is needed.
+
+Monitoring: All privileged actions are written to the audit log, including who approved them and when.

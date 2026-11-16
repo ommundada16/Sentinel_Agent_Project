@@ -1,0 +1,7 @@
+Segregation of Duties Policy
+
+Purpose: No single person should be able to complete a sensitive business process alone, which reduces fraud risk.
+
+Rules: A person who can create payments in the finance application must not also hold administrator rights that approve payments. A person who requests access for themselves must not be the approver of that request. Developers with production deployment rights must not also approve their own change requests.
+
+Exceptions: Exceptions need written approval from the Security team and are reviewed every quarter.

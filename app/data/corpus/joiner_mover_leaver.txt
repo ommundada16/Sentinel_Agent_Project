@@ -1,0 +1,7 @@
+Joiner Mover Leaver Policy
+
+Joiners: New employees receive a baseline set of low sensitivity entitlements based on their department role on their first day. Additional access must be requested and justified.
+
+Movers: When an employee changes department, entitlements that belonged to the old role must be reviewed within five business days and revoked unless the new manager confirms they are still needed.
+
+Leavers: When an employee leaves the company their account status changes to inactive on the last working day. All entitlements are revoked within one business day. Inactive users are never eligible for new access.

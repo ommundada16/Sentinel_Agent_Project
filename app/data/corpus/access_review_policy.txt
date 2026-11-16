@@ -1,0 +1,11 @@
+Access Review Policy
+
+Purpose: Access reviews confirm that every user holds only the entitlements they need for their current job.
+
+Scope: All employees and contractors, and all applications that hold company or customer data.
+
+Cadence: Entitlements with low sensitivity are reviewed annually. Entitlements with medium sensitivity are reviewed every six months. Entitlements with high sensitivity, such as administrator rights, are reviewed every quarter.
+
+Process: The manager of each user certifies or revokes every entitlement in the review. Entitlements that are not certified within fourteen days are revoked automatically. Revocations must record a reason so that auditors can trace the decision.
+
+Evidence: Review results, approver names and timestamps are retained for seven years for audit purposes.
