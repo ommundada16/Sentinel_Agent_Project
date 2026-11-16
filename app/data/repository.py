@@ -5,7 +5,7 @@ every read is filtered + LIMITed so it works the same at 15 rows or 15M (spec 5.
 """
 import math
 
-from sqlalchemy import and_, delete, func, or_, select
+from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.orm import Session
 
 from app.data.models import (
@@ -154,6 +154,24 @@ def create_pending_approval(s: Session, approval_id: str, session_id: str, tool_
 
 def get_pending_approval(s: Session, approval_id: str) -> PendingApproval | None:
     return s.get(PendingApproval, approval_id)
+
+
+def open_approval_for_session(s: Session, session_id: str) -> str | None:
+    stmt = select(PendingApproval.id).where(
+        PendingApproval.session_id == session_id, PendingApproval.status == "pending").limit(1)
+    return s.scalar(stmt)
+
+
+def resolve_pending_approval(s: Session, approval_id: str, new_status: str) -> dict | None:
+    """Atomically flip pending -> approved/denied. WHY a conditional UPDATE: two concurrent
+    approvals of the same request cannot both win, so a write never runs twice."""
+    res = s.execute(update(PendingApproval)
+                    .where(PendingApproval.id == approval_id, PendingApproval.status == "pending")
+                    .values(status=new_status))
+    if res.rowcount != 1:
+        return None
+    row = s.get(PendingApproval, approval_id)
+    return {"session_id": row.session_id, "tool_call": row.tool_call_json}
 
 
 def add_audit(s: Session, **fields) -> None:
