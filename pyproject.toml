@@ -1,0 +1,13 @@
+[project]
+name = "sentinel"
+version = "0.1.0"
+description = "A safe, auditable tool-using AI agent over a mock access-governance system"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: calls a real LLM (skipped by default)", "ml: uses the real MiniLM model"]
+addopts = "-m 'not live and not ml'"
+
+[tool.ruff]
+line-length = 110

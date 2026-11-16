@@ -1,0 +1,2 @@
+# Optional: real local embeddings (large download). Tests use the fake embedder.
+sentence-transformers>=3.0
