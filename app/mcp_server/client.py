@@ -4,6 +4,7 @@ LocalExecutor: in-process (tests/evals, fast). MCPExecutor: real MCP client over
 """
 import asyncio
 import json
+import os
 import sys
 import threading
 from contextlib import AsyncExitStack
@@ -34,7 +35,10 @@ class MCPExecutor:
         from mcp import ClientSession, StdioServerParameters
         from mcp.client.stdio import stdio_client
 
-        params = StdioServerParameters(command=sys.executable, args=["-m", "app.mcp_server.server"])
+        # WHY pass env explicitly: the MCP SDK only forwards a minimal default env, but the server
+        # needs DATABASE_URL etc. to reach the same database as the agent.
+        params = StdioServerParameters(command=sys.executable, args=["-m", "app.mcp_server.server"],
+                                       env=dict(os.environ))
         read, write = await self._stack.enter_async_context(stdio_client(params))
         self._session = await self._stack.enter_async_context(ClientSession(read, write))
         await self._session.initialize()
