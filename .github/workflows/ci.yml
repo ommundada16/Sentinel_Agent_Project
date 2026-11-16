@@ -1,0 +1,32 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # WHY: tests exercise the REAL engine (pgvector, HNSW) we ship on, not SQLite.
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: sentinel
+          POSTGRES_PASSWORD: sentinel
+          POSTGRES_DB: sentinel
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U sentinel" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://sentinel:sentinel@localhost:5432/sentinel
+      TEST_DATABASE_URL: postgresql+psycopg://sentinel:sentinel@localhost:5432/sentinel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check .
+      - name: Apply migrations (proves alembic + pgvector + HNSW work)
+        run: alembic upgrade head
+      - run: pytest -q
+      - name: Eval regression gate
+        run: python -m evals.run_evals
